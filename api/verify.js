@@ -4,7 +4,7 @@ import path from 'path';
 export default function handler(req, res) {
     const userAgent = req.headers['user-agent'] || '';
 
-    const isBrowser = userAgent.includes('Mozilla') || userAgent.includes('Chrome') || userAgent.includes('Safari');
+    const isBrowser = userAgent.includes('Mozilla') || userAgent.includes('Chrome') || userAgent.includes('Opera');
 
     if (isBrowser) {
         res.setHeader('Content-Type', 'text/html');
