@@ -2,14 +2,15 @@ import fs from "fs";
 import path from "path";
 
 export default function handler(req, res) {
-    const accept = req.headers["accept"] || "";
-    const userAgent = req.headers["user-agent"] || "";
+    const FetchDest = req.headers["sec-fetch-dest"] || "";
+    const FetchMode = req.headers["sec-fetch-mode"] || "";
+    const FetchSite = req.headers["sec-fetch-site"] || "";
 
-    const IsBrowser =
-        accept.includes("text/html") ||
-        accept.includes("application/xhtml+xml");
+    const IsBrowserNavigation =
+        FetchDest === "document" ||
+        FetchMode === "navigate";
 
-    if (IsBrowser) {
+    if (IsBrowserNavigation) {
         res.setHeader("Content-Type", "text/html");
 
         return res.status(404).send(`
@@ -46,15 +47,15 @@ export default function handler(req, res) {
     }
 
     try {
-        const filePath = path.join(process.cwd(), "script.lua");
-        const luaScript = fs.readFileSync(filePath, "utf8");
+        const FilePath = path.join(process.cwd(), "script.lua");
+        const LuaScript = fs.readFileSync(FilePath, "utf8");
 
         res.setHeader("Content-Type", "text/plain; charset=utf-8");
         res.setHeader("Cache-Control", "no-store");
 
-        return res.status(200).send(luaScript);
-    } catch (error) {
-        console.error(error);
+        return res.status(200).send(LuaScript);
+    } catch (Error) {
+        console.error(Error);
         return res.status(500).send("Error loading script");
     }
 }
